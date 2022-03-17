@@ -1,8 +1,9 @@
+import { Global } from '@emotion/react'
 import { globalStyles } from '../shared/styles'
 
 const App = ({ Component, pageProps }) => (
   <>
-    {globalStyles}
+    <Global styles={globalStyles} />
     <Component {...pageProps} />
   </>
 )
