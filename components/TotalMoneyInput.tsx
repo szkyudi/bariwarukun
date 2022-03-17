@@ -1,7 +1,7 @@
 import { useRecoilState } from "recoil";
 import { totalMoneyState } from "../states/calculator";
 
-export const BillInput = () => {
+export const TotalMoneyInput = () => {
   const [num, setNum] = useRecoilState(totalMoneyState)
   return (
     <input
