@@ -104,3 +104,18 @@ export const remainingMoneyState = selector({
     return sum.normal + sum.big + sum.small - money.total
   }
 })
+
+export const resultState = selector({
+  key: 'resultState',
+  get: ({ get }) => {
+    const money = get(moneyState);
+    const remaining = get(remainingMoneyState);
+    return {
+      total: money.total,
+      normal: money.normal,
+      big: money.big,
+      small: money.small,
+      remaining: remaining,
+    }
+  }
+})
