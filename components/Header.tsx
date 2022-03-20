@@ -8,6 +8,9 @@ export const Header = () => (
 
 const styles = {
   header: css`
-    background: #ddd;
+    background: skyblue;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 8px;
   `,
 }
