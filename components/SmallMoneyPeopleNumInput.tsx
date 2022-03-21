@@ -1,13 +1,16 @@
 import { useRecoilState } from "recoil";
 import { smallMoneyPeopleNumState } from "../states/calculator";
+import { NumericInput } from "./NumericInput";
 
-export const SmallMoneyPeopleNumInput = () => {
+export const SmallMoneyPeopleNumInput = ({ ...props }) => {
   const [num, setNum] = useRecoilState(smallMoneyPeopleNumState)
   return (
-    <input
-      type="number"
-      value={String(num)}
-      onChange={(e) => setNum(Number(e.currentTarget.value))}
+    <NumericInput
+      value={num}
+      onChange={setNum}
+      label="人数"
+      adorment="人"
+      {...props}
     />
   )
 }

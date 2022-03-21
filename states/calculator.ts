@@ -7,20 +7,16 @@ export const totalMoneyState = atom({
 
 export const totalPeopleNumState = atom({
   key: 'totalNumState',
-  default: 2
+  default: 3,
 });
 
 export const bigMoneyState = atom({
-  key: 'bigMoneyState',
+  key: "bigMoneyState",
   default: selector({
-    key: 'bigMoneyState/default',
-    get: ({ get }) => {
-      const total = get(totalMoneyState);
-      const peopleNum = get(totalPeopleNumState);
-      return Math.ceil(total / peopleNum * 2);
-    }
-  })
-})
+    key: "bigMoneyState/default",
+    get: ({ get }) => Math.ceil(get(totalMoneyState) / get(totalPeopleNumState))
+  }),
+});
 
 export const bigMoneyPeopleNumState = atom({
   key: 'bigMoneyPeopleNumState',
@@ -28,16 +24,12 @@ export const bigMoneyPeopleNumState = atom({
 })
 
 export const smallMoneyState = atom({
-  key: 'smallMoneyState',
+  key: "smallMoneyState",
   default: selector({
-    key: 'smallMoneyState/default',
-    get: ({ get }) => {
-      const total = get(totalMoneyState);
-      const peopleNum = get(totalPeopleNumState);
-      return Math.ceil(total / peopleNum / 2);
-    }
-  })
-})
+    key: "smallMoneyState/default",
+    get: ({ get }) => Math.ceil(get(totalMoneyState) / get(totalPeopleNumState))
+  }),
+});
 
 export const smallMoneyPeopleNumState = atom({
   key: 'smallMoneyPeopleNumState',
@@ -51,11 +43,12 @@ export const normalMoneyState = selector({
     const bigTotal = get(bigMoneyState) * get(bigMoneyPeopleNumState)
     const smallTotal = get(smallMoneyState) * get(smallMoneyPeopleNumState)
     const remaining = total - bigTotal - smallTotal;
-    return Math.ceil(remaining / get(normalMoneyPeopleState));
+    const normalMoneyPeopleNum = get(normalMoneyPeopleNumState);
+    return Math.ceil(remaining / normalMoneyPeopleNum);
   }
 })
 
-export const normalMoneyPeopleState = selector({
+export const normalMoneyPeopleNumState = selector({
   key: 'normalMoneyState',
   get: ({ get }) => {
     return get(totalPeopleNumState) - get(bigMoneyPeopleNumState) - get(smallMoneyPeopleNumState);
@@ -66,10 +59,6 @@ export const normalMoneyPeopleState = selector({
 export const moneyState = selector({
   key: 'moneyState',
   get: ({ get }) => {
-    const sum = {
-      big: get(bigMoneyState) * get(bigMoneyPeopleNumState),
-      small: get(smallMoneyState) * get(smallMoneyPeopleNumState),
-    }
     return {
       total: get(totalMoneyState),
       big: get(bigMoneyState),
@@ -86,7 +75,7 @@ export const peopleNumState = selector({
       total: get(totalPeopleNumState),
       big: get(bigMoneyPeopleNumState),
       small: get(smallMoneyPeopleNumState),
-      normal: get(normalMoneyPeopleState),
+      normal: get(normalMoneyPeopleNumState),
     }
   }
 })
@@ -101,7 +90,8 @@ export const remainingMoneyState = selector({
       big: money.big * peopleNum.big,
       small: money.small * peopleNum.small
     }
-    return sum.normal + sum.big + sum.small - money.total
+    const remaining = sum.normal + sum.big + sum.small - money.total
+    return remaining < 0 ? 0 : remaining;
   }
 })
 
@@ -109,13 +99,23 @@ export const resultState = selector({
   key: 'resultState',
   get: ({ get }) => {
     const money = get(moneyState);
+    const peopleNum = get(peopleNumState);
     const remaining = get(remainingMoneyState);
+    const pay = money.normal * peopleNum.normal + money.big * peopleNum.big + money.small * peopleNum.small;
     return {
       total: money.total,
+      pay: pay,
       normal: money.normal,
       big: money.big,
       small: money.small,
       remaining: remaining,
     }
+  }
+})
+
+export const paysState = selector({
+  key: 'paysState',
+  get: ({ get }) => {
+
   }
 })

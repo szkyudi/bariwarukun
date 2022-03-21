@@ -1,11 +1,13 @@
-import { Global } from '@emotion/react'
+import { CssBaseline, ThemeProvider } from '@mui/material'
 import { RecoilRoot } from 'recoil'
-import { globalStyles } from '../shared/styles'
+import { theme } from '../theme'
 
 const App = ({ Component, pageProps }) => (
   <RecoilRoot>
-    <Global styles={globalStyles} />
-    <Component {...pageProps} />
+    <CssBaseline enableColorScheme />
+    <ThemeProvider theme={theme}>
+      <Component {...pageProps} />
+    </ThemeProvider>
   </RecoilRoot>
 )
 
