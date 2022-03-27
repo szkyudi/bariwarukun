@@ -11,7 +11,7 @@ const Home = () => (
       </Toolbar>
     </AppBar>
     <Container maxWidth="sm">
-      <Box sx={{my: 4}}>
+      <Box sx={{my: 3}}>
         <Calculator />
       </Box>
     </Container>

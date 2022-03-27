@@ -66,7 +66,37 @@ export const Calculator = () => {
 
  return (
     <>
-      <TableContainer sx={{mt: 2}} component={Paper}>
+      <TableContainer>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell component="th" scope="row" sx={{fontWeight: "bold", py: 2}}>
+                お会計
+              </TableCell>
+              <TableCell align="right">
+                {totalBill || 0} 円
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component="th" scope="row" sx={{fontWeight: "bold", py: 2}}>
+                お預かり
+              </TableCell>
+              <TableCell align="right">
+                {totalPay || 0} 円
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component="th" scope="row" sx={{fontWeight: "bold", py: 2}}>
+                {remaining >= 0 ? "お釣り" : "不足金額"}
+              </TableCell>
+              <TableCell align="right">
+                {remaining >= 0 ? remaining || 0 : -remaining || 0} 円
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TableContainer sx={{mt: 1}} component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
@@ -140,37 +170,7 @@ export const Calculator = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <TableContainer sx={{mt: 2}} component={Paper}>
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell component="th" scope="row" sx={{fontWeight: "bold", py: 2}}>
-                お会計
-              </TableCell>
-              <TableCell align="right">
-                {totalBill || 0} 円
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell component="th" scope="row" sx={{fontWeight: "bold", py: 2}}>
-                お預かり
-              </TableCell>
-              <TableCell align="right">
-                {totalPay || 0} 円
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell component="th" scope="row" sx={{fontWeight: "bold", py: 2}}>
-                {remaining >= 0 ? "お釣り" : "不足金額"}
-              </TableCell>
-              <TableCell align="right">
-                {remaining >= 0 ? remaining || 0 : -remaining || 0} 円
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Grid container spacing={1} sx={{mt: 4}}>
+      <Grid container spacing={1} sx={{mt: 3}}>
         <Grid item xs={7}>
           <NumericInput
             label="お会計"
