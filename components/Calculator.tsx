@@ -12,11 +12,11 @@ type PayOption = {
   payerNum: number;
 }
 export const Calculator = () => {
-  const [totalBill, setTotalBill] = useState<number>(25000);
-  const [totalPayerNum, setTotalPayerNum] = useState<number>(8);
+  const [totalBill, setTotalBill] = useState<number>(0);
+  const [totalPayerNum, setTotalPayerNum] = useState<number>(0);
   const [optionBill, setOptionBill] = useState<number>(0);
   const [optionPayerNum, setOptionPayerNum] = useState<number>(0);
-  const [payOptions, setPayOptions] = useState<PayOption[]>([{ id: uuidv4(), bill: 3000, payerNum: 2}]);
+  const [payOptions, setPayOptions] = useState<PayOption[]>([]);
   const [ceilUnit, setCeilUnit] = useState<number>(1);
 
   const generalPayerNum = totalPayerNum - payOptions.reduce((totalPayerNum, option) => totalPayerNum + option.payerNum, 0)
@@ -66,14 +66,14 @@ export const Calculator = () => {
 
  return (
     <>
-      <TableContainer sx={{mt: 2}}>
-        <Table padding="none">
+      <TableContainer sx={{mt: 2}} component={Paper}>
+        <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{pb: 1, fontWeight: "bold"}} variant="head">
+              <TableCell sx={{py: 2, fontWeight: "bold"}} variant="head">
                   支払い金額
               </TableCell>
-              <TableCell sx={{pb: 1, fontWeight: "bold"}} variant="head" align="right">
+              <TableCell sx={{py: 2, fontWeight: "bold"}} variant="head" align="right">
                   人数
               </TableCell>
               <TableCell></TableCell>
@@ -171,7 +171,7 @@ export const Calculator = () => {
         </Table>
       </TableContainer>
       <Grid container spacing={1} sx={{mt: 4}}>
-        <Grid item xs={8}>
+        <Grid item xs={7}>
           <NumericInput
             label="お会計"
             adorment="円"
@@ -181,9 +181,9 @@ export const Calculator = () => {
             fullWidth
           />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={5}>
           <NumericInput
-            label="人数"
+            label="支払い人数"
             value={totalPayerNum || ''}
             setter={setTotalPayerNum}
             adorment="人"
@@ -194,12 +194,12 @@ export const Calculator = () => {
       </Grid>
       <Box sx={{mt: 2, mb: 1}}>
         <Typography variant="caption">
-          支払い金額が違う人を追加する
+          支払い金額の追加
         </Typography>
       </Box>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={1}>
-          <Grid item xs={8}>
+          <Grid item xs={7}>
             <NumericInput
               label="金額"
               adorment="円"
@@ -209,7 +209,7 @@ export const Calculator = () => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={5}>
             <NumericInput
               label="人数"
               adorment="人"
