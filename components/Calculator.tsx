@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, IconButton, List, ListItem, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
+import { Box, Button, Divider, FormControl, FormControlLabel, FormLabel, Grid, IconButton, List, ListItem, Paper, Radio, RadioGroup, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
 import { FormEvent, useState } from "react"
 import { NumericInput } from "./NumericInput";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -18,9 +18,10 @@ export const Calculator = () => {
   const [optionBill, setOptionBill] = useState<number>(0);
   const [optionPayerNum, setOptionPayerNum] = useState<number>(0);
   const [payOptions, setPayOptions] = useState<PayOption[]>([]);
+  const [ceilUnit, setCeilUnit] = useState<number>(1);
 
   const generalPayerNum = totalPayerNum - payOptions.reduce((totalPayerNum, option) => totalPayerNum + option.payerNum, 0)
-  const generalBill = generalPayerNum === 0 ? 0 : Math.ceil((totalBill - payOptions.reduce((totalBill, option) => totalBill + option.bill * option.payerNum, 0)) / generalPayerNum);
+  const generalBill = generalPayerNum === 0 ? 0 : Math.ceil((totalBill - payOptions.reduce((totalBill, option) => totalBill + option.bill * option.payerNum, 0)) / generalPayerNum / ceilUnit) * ceilUnit;
   const totalPay = generalBill * generalPayerNum + payOptions.reduce((totalBill, option) => totalBill + option.bill * option.payerNum, 0);
   const remaining = totalPay - totalBill;
 
@@ -107,6 +108,23 @@ export const Calculator = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Box sx={{mt: 2}}>
+        <Typography variant="caption">
+          切り上げ単位
+        </Typography>
+      </Box>
+      <RadioGroup
+        row
+        defaultValue="1"
+        aria-labelledby="round-option"
+        value={ceilUnit}
+        onChange={(e) => setCeilUnit(Number(e.currentTarget.value))}
+      >
+        <FormControlLabel value="1" control={<Radio size="small" />} label="1円" />
+        <FormControlLabel value="10" control={<Radio size="small" />} label="10円" />
+        <FormControlLabel value="100" control={<Radio size="small" />} label="100円" />
+        <FormControlLabel value="1000" control={<Radio size="small" />} label="1000円" />
+      </RadioGroup>
       <Box sx={{mt: 2, mb: 1}}>
         <Typography variant="caption">
           支払い金額が違う人を追加する
