@@ -66,11 +66,11 @@ export const Calculator = () => {
 
  return (
     <>
-      <TableContainer>
+      <TableContainer component={Paper}>
         <Table>
           <TableBody>
             <TableRow>
-              <TableCell component="th" scope="row" sx={{fontWeight: "bold", py: 2}}>
+              <TableCell component="th" scope="row" sx={{py: 1}}>
                 お会計
               </TableCell>
               <TableCell align="right">
@@ -78,7 +78,7 @@ export const Calculator = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell component="th" scope="row" sx={{fontWeight: "bold", py: 2}}>
+              <TableCell component="th" scope="row" sx={{py: 1}}>
                 お預かり
               </TableCell>
               <TableCell align="right">
@@ -86,7 +86,7 @@ export const Calculator = () => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell component="th" scope="row" sx={{fontWeight: "bold", py: 2}}>
+              <TableCell component="th" scope="row" sx={{py: 1}}>
                 {remaining >= 0 ? "お釣り" : "不足金額"}
               </TableCell>
               <TableCell align="right">
@@ -100,10 +100,10 @@ export const Calculator = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{py: 2, fontWeight: "bold"}} variant="head">
+              <TableCell sx={{py: 1}} variant="head">
                   支払い金額
               </TableCell>
-              <TableCell sx={{py: 2, fontWeight: "bold"}} variant="head" align="right">
+              <TableCell sx={{py: 1}} variant="head" align="right">
                   人数
               </TableCell>
               <TableCell></TableCell>
@@ -111,14 +111,14 @@ export const Calculator = () => {
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell sx={{py: 2}}>
+              <TableCell sx={{py: 1}}>
                 {generalBill || 0} 円
               </TableCell>
-              <TableCell sx={{py: 2}} align="right">
+              <TableCell sx={{py: 1}} align="right">
                 {generalPayerNum || 0} 人
               </TableCell>
-              <TableCell sx={{width: 136, py: 2}} align="right">
-                <FormControl>
+              <TableCell sx={{width: 136, py: 1}} align="right">
+                <FormControl sx={{width: 110}}>
                   <InputLabel id="ceil-unit-label">丸め単位</InputLabel>
                   <Select
                     labelId="ceil-unit-label"
@@ -138,13 +138,13 @@ export const Calculator = () => {
             </TableRow>
             {payOptions.map(option => (
               <TableRow key={option.id}>
-                <TableCell sx={{py: 2}}>
+                <TableCell sx={{py: 1}}>
                   {option.bill || '- '} 円
                 </TableCell>
-                <TableCell sx={{py: 2}} align="right">
+                <TableCell sx={{py: 1}} align="right">
                   {option.payerNum || '- '} 人
                 </TableCell>
-                <TableCell sx={{width: 136, py: 2}} align="right">
+                <TableCell sx={{width: 136, py: 1}} align="right">
                   <ButtonGroup variant="text" size="small">
                     <Button
                       onClick={() => decrementOptionPayerNum(option.id)}
@@ -170,7 +170,7 @@ export const Calculator = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Grid container spacing={1} sx={{mt: 3}}>
+      <Grid container spacing={1} sx={{mt: 2}}>
         <Grid item xs={7}>
           <NumericInput
             label="お会計"
@@ -192,11 +192,11 @@ export const Calculator = () => {
           />
         </Grid>
       </Grid>
-      <Box sx={{mt: 2, mb: 1}}>
+      <Divider sx={{my: 1}}>
         <Typography variant="caption">
           個別の支払い金額の追加
         </Typography>
-      </Box>
+      </Divider>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={1}>
           <Grid item xs={7}>
