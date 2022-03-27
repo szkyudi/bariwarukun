@@ -1,21 +1,18 @@
-import { FormControl, InputAdornment, InputLabel, OutlinedInput } from "@mui/material";
+import { FormControl, FormControlProps, InputAdornment, InputLabel, OutlinedInput } from "@mui/material";
+import { Dispatch, SetStateAction } from "react";
 import { ChangeEvent } from "react";
-import { SetterOrUpdater } from "recoil";
 
-type Props = {
-  value: number,
-  onChange?: SetterOrUpdater<number>,
+interface Props extends FormControlProps {
+  value: number | '',
+  setter?: Dispatch<SetStateAction<number>>,
   label: string,
   adorment: string,
   disabled?: boolean
 }
-export const NumericInput = ({ value, onChange, label, adorment, disabled, ...props }: Props) => {
+export const NumericInput = ({ value, setter, label, adorment, disabled, ...props }: Props) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!onChange) return;
-    const value = Number(e.currentTarget.value);
-    if (Number.isInteger(value)) {
-      onChange(value);
-    }
+    if (!setter) return;
+    setter(Number(e.currentTarget.value));
   }
 
   return (
@@ -27,7 +24,6 @@ export const NumericInput = ({ value, onChange, label, adorment, disabled, ...pr
         onChange={handleChange}
         endAdornment={<InputAdornment position="end">{adorment}</InputAdornment>}
         label={label}
-        size="small"
         onFocus={(e) => e.currentTarget.select()}
       />
     </FormControl>
