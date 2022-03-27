@@ -1,10 +1,9 @@
-import { Box, Button, Divider, FormControl, FormControlLabel, FormLabel, Grid, IconButton, List, ListItem, Paper, Radio, RadioGroup, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
+import { Box, Button, ButtonGroup, Divider, FormControl, FormControlLabel, FormLabel, Grid, IconButton, InputLabel, List, ListItem, MenuItem, Paper, Radio, RadioGroup, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
 import { FormEvent, useState } from "react"
 import { NumericInput } from "./NumericInput";
 import DeleteIcon from '@mui/icons-material/Delete';
-import PersonIcon from '@mui/icons-material/Person';
-import CurrencyYenIcon from '@mui/icons-material/CurrencyYen';
-import LockIcon from '@mui/icons-material/Lock';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import { v4 as uuidv4} from 'uuid';
 
 type PayOption = {
@@ -13,11 +12,11 @@ type PayOption = {
   payerNum: number;
 }
 export const Calculator = () => {
-  const [totalBill, setTotalBill] = useState<number>(0);
-  const [totalPayerNum, setTotalPayerNum] = useState<number>(0);
+  const [totalBill, setTotalBill] = useState<number>(25000);
+  const [totalPayerNum, setTotalPayerNum] = useState<number>(8);
   const [optionBill, setOptionBill] = useState<number>(0);
   const [optionPayerNum, setOptionPayerNum] = useState<number>(0);
-  const [payOptions, setPayOptions] = useState<PayOption[]>([]);
+  const [payOptions, setPayOptions] = useState<PayOption[]>([{ id: uuidv4(), bill: 3000, payerNum: 2}]);
   const [ceilUnit, setCeilUnit] = useState<number>(1);
 
   const generalPayerNum = totalPayerNum - payOptions.reduce((totalPayerNum, option) => totalPayerNum + option.payerNum, 0)
@@ -39,9 +38,139 @@ export const Calculator = () => {
     setOptionPayerNum(0);
   }
 
+  const removeOption = (id: string) => {
+    setPayOptions(payOptions.filter(option => option.id !== id));
+  }
+
+  const incrementOptionPayerNum = (id: string) => {
+    setPayOptions(payOptions.map(option => {
+      if (option.id === id) {
+        option.payerNum++;
+      }
+      return option;
+    }))
+  }
+
+  const decrementOptionPayerNum = (id: string) => {
+    if (payOptions.find(option => option.id === id).payerNum <= 1) {
+      removeOption(id);
+      return;
+    }
+    setPayOptions(payOptions.map(option => {
+      if (option.id === id) {
+        option.payerNum--;
+      }
+      return option;
+    }))
+  }
+
  return (
     <>
-      <Grid container spacing={1}>
+      <TableContainer sx={{mt: 2}}>
+        <Table padding="none">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{pb: 1, fontWeight: "bold"}} variant="head">
+                  支払い金額
+              </TableCell>
+              <TableCell sx={{pb: 1, fontWeight: "bold"}} variant="head" align="right">
+                  人数
+              </TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell sx={{py: 2}}>
+                {generalBill || 0} 円
+              </TableCell>
+              <TableCell sx={{py: 2}} align="right">
+                {generalPayerNum || 0} 人
+              </TableCell>
+              <TableCell sx={{width: 136, py: 2}} align="right">
+                <FormControl>
+                  <InputLabel id="ceil-unit-label">丸め単位</InputLabel>
+                  <Select
+                    labelId="ceil-unit-label"
+                    id="ceil-unit"
+                    value={ceilUnit}
+                    label="丸め単位"
+                    size="small"
+                    onChange={(e) => setCeilUnit(Number(e.target.value))}
+                  >
+                    <MenuItem value={1}>1円</MenuItem>
+                    <MenuItem value={10}>10円</MenuItem>
+                    <MenuItem value={100}>100円</MenuItem>
+                    <MenuItem value={1000}>1000円</MenuItem>
+                  </Select>
+                </FormControl>
+              </TableCell>
+            </TableRow>
+            {payOptions.map(option => (
+              <TableRow key={option.id}>
+                <TableCell sx={{py: 2}}>
+                  {option.bill || '- '} 円
+                </TableCell>
+                <TableCell sx={{py: 2}} align="right">
+                  {option.payerNum || '- '} 人
+                </TableCell>
+                <TableCell sx={{width: 136, py: 2}} align="right">
+                  <ButtonGroup variant="text" size="small">
+                    <Button
+                      onClick={() => decrementOptionPayerNum(option.id)}
+                    >
+                      <RemoveIcon />
+                    </Button>
+                    <Button
+                      onClick={() => incrementOptionPayerNum(option.id)}
+                      disabled={generalPayerNum <= 0}
+                    >
+                      <AddIcon />
+                    </Button>
+                    <Button
+                      color="error"
+                      onClick={() => removeOption(option.id)}
+                    >
+                      <DeleteIcon />
+                    </Button>
+                  </ButtonGroup>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TableContainer sx={{mt: 2}} component={Paper}>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell component="th" scope="row" sx={{fontWeight: "bold", py: 2}}>
+                お会計
+              </TableCell>
+              <TableCell align="right">
+                {totalBill || 0} 円
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component="th" scope="row" sx={{fontWeight: "bold", py: 2}}>
+                お預かり
+              </TableCell>
+              <TableCell align="right">
+                {totalPay || 0} 円
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component="th" scope="row" sx={{fontWeight: "bold", py: 2}}>
+                {remaining >= 0 ? "お釣り" : "不足金額"}
+              </TableCell>
+              <TableCell align="right">
+                {remaining >= 0 ? remaining || 0 : -remaining || 0} 円
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Grid container spacing={1} sx={{mt: 4}}>
         <Grid item xs={8}>
           <NumericInput
             label="お会計"
@@ -63,68 +192,6 @@ export const Calculator = () => {
           />
         </Grid>
       </Grid>
-      <TableContainer sx={{mt: 2}} component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{fontWeight: "bold"}}>
-                  支払い金額
-              </TableCell>
-              <TableCell sx={{fontWeight: "bold"}}>
-                  人数
-              </TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow>
-              <TableCell>
-                {generalBill || 0} 円
-              </TableCell>
-              <TableCell>
-                {generalPayerNum || 0} 人
-              </TableCell>
-              <TableCell sx={{width: 0}} size="small" align="right"></TableCell>
-            </TableRow>
-            {payOptions.map(option => (
-              <TableRow key={option.id}>
-                <TableCell>
-                  {option.bill || '- '} 円
-                </TableCell>
-                <TableCell>
-                  {option.payerNum || '- '} 人
-                </TableCell>
-                <TableCell sx={{width: 0}} size="small" align="right">
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => setPayOptions(payOptions.filter(prevOption => prevOption.id !== option.id ))}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Box sx={{mt: 2}}>
-        <Typography variant="caption">
-          切り上げ単位
-        </Typography>
-      </Box>
-      <RadioGroup
-        row
-        defaultValue="1"
-        aria-labelledby="round-option"
-        value={ceilUnit}
-        onChange={(e) => setCeilUnit(Number(e.currentTarget.value))}
-      >
-        <FormControlLabel value="1" control={<Radio size="small" />} label="1円" />
-        <FormControlLabel value="10" control={<Radio size="small" />} label="10円" />
-        <FormControlLabel value="100" control={<Radio size="small" />} label="100円" />
-        <FormControlLabel value="1000" control={<Radio size="small" />} label="1000円" />
-      </RadioGroup>
       <Box sx={{mt: 2, mb: 1}}>
         <Typography variant="caption">
           支払い金額が違う人を追加する
@@ -167,36 +234,6 @@ export const Calculator = () => {
           </Button>
         </Stack>
       </form>
-      <TableContainer sx={{mt: 2}} component={Paper}>
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell component="th" scope="row" sx={{fontWeight: "bold"}}>
-                お会計
-              </TableCell>
-              <TableCell align="right">
-                {totalBill || 0} 円
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell component="th" scope="row" sx={{fontWeight: "bold"}}>
-                お預かり
-              </TableCell>
-              <TableCell align="right">
-                {totalPay || 0} 円
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell component="th" scope="row" sx={{fontWeight: "bold"}}>
-                {remaining >= 0 ? "お釣り" : "不足金額"}
-              </TableCell>
-              <TableCell align="right">
-                {remaining >= 0 ? remaining || 0 : -remaining || 0} 円
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
     </>
   )
 }
