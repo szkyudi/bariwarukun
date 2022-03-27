@@ -194,7 +194,7 @@ export const Calculator = () => {
       </Grid>
       <Box sx={{mt: 2, mb: 1}}>
         <Typography variant="caption">
-          支払い金額の追加
+          個別の支払い金額の追加
         </Typography>
       </Box>
       <form onSubmit={handleSubmit}>
