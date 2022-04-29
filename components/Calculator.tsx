@@ -121,12 +121,12 @@ export const Calculator = () => {
                 </TableCell>
                 <TableCell sx={{width: 136, py: 1}} align="right">
                   <FormControl sx={{width: 110}}>
-                    <InputLabel id="ceil-unit-label">端数切り</InputLabel>
+                    <InputLabel id="ceil-unit-label">端数丸め</InputLabel>
                     <Select
                       labelId="ceil-unit-label"
                       id="ceil-unit"
                       value={ceilUnit}
-                      label="丸め単位"
+                      label="端数丸め"
                       size="small"
                       onChange={(e) => setCeilUnit(Number(e.target.value))}
                     >
