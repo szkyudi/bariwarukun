@@ -17,7 +17,7 @@ export const Calculator = () => {
   const [optionBill, setOptionBill] = useState<number>(0);
   const [optionPayerNum, setOptionPayerNum] = useState<number>(0);
   const [payOptions, setPayOptions] = useState<PayOption[]>([]);
-  const [ceilUnit, setCeilUnit] = useState<number>(1);
+  const [ceilUnit, setCeilUnit] = useState<number>(100);
 
   const generalPayerNum = totalPayerNum - payOptions.reduce((totalPayerNum, option) => totalPayerNum + option.payerNum, 0)
   const generalBill = generalPayerNum === 0 ? 0 : Math.ceil((totalBill - payOptions.reduce((totalBill, option) => totalBill + option.bill * option.payerNum, 0)) / generalPayerNum / ceilUnit) * ceilUnit;
@@ -121,7 +121,7 @@ export const Calculator = () => {
                 </TableCell>
                 <TableCell sx={{width: 136, py: 1}} align="right">
                   <FormControl sx={{width: 110}}>
-                    <InputLabel id="ceil-unit-label">丸め単位</InputLabel>
+                    <InputLabel id="ceil-unit-label">端数切り</InputLabel>
                     <Select
                       labelId="ceil-unit-label"
                       id="ceil-unit"

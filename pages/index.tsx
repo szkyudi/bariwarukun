@@ -1,12 +1,13 @@
 import { AppBar, Box, Container, Toolbar, Typography } from "@mui/material"
 import { Calculator } from "../components/Calculator"
+import config from "../lib/config"
 
 const Home = () => (
   <>
     <AppBar position="static">
       <Toolbar>
         <Typography component="h1" fontWeight="bold">
-          割り勘電卓
+          {config.title}
         </Typography>
       </Toolbar>
     </AppBar>
