@@ -5,24 +5,23 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { v4 as uuidv4} from 'uuid';
+import { blue } from "@mui/material/colors";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { ceilUnitState, generalBillState, generalPayerNumState, payOptionsState, remainingState, totalBillState, totalPayerNumState, totalPayState } from "../lib/state";
 
-type PayOption = {
-  id: string;
-  bill: number;
-  payerNum: number;
-}
 export const Calculator = () => {
-  const [totalBill, setTotalBill] = useState<number>(0);
-  const [totalPayerNum, setTotalPayerNum] = useState<number>(0);
+  const [totalBill, setTotalBill] = useRecoilState(totalBillState);
+  const [totalPayerNum, setTotalPayerNum] = useRecoilState(totalPayerNumState);
+  const [payOptions, setPayOptions] = useRecoilState(payOptionsState);
+  const [ceilUnit, setCeilUnit] = useRecoilState(ceilUnitState);
+
   const [optionBill, setOptionBill] = useState<number>(0);
   const [optionPayerNum, setOptionPayerNum] = useState<number>(0);
-  const [payOptions, setPayOptions] = useState<PayOption[]>([]);
-  const [ceilUnit, setCeilUnit] = useState<number>(100);
 
-  const generalPayerNum = totalPayerNum - payOptions.reduce((totalPayerNum, option) => totalPayerNum + option.payerNum, 0)
-  const generalBill = generalPayerNum === 0 ? 0 : Math.ceil((totalBill - payOptions.reduce((totalBill, option) => totalBill + option.bill * option.payerNum, 0)) / generalPayerNum / ceilUnit) * ceilUnit;
-  const totalPay = generalBill * generalPayerNum + payOptions.reduce((totalBill, option) => totalBill + option.bill * option.payerNum, 0);
-  const remaining = totalPay - totalBill;
+  const generalPayerNum = useRecoilValue(generalPayerNumState);
+  const generalBill = useRecoilValue(generalBillState);
+  const totalPay = useRecoilValue(totalPayState);
+  const remaining = useRecoilValue(remainingState);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -76,7 +75,7 @@ export const Calculator = () => {
           <NumericInput
             label="お会計"
             adorment="円"
-            value={totalBill || ''}
+            value={totalBill}
             setter={setTotalBill}
             size="small"
             fullWidth
@@ -85,7 +84,7 @@ export const Calculator = () => {
         <Grid item xs={5}>
           <NumericInput
             label="合計人数"
-            value={totalPayerNum || ''}
+            value={totalPayerNum}
             setter={setTotalPayerNum}
             adorment="人"
             size="small"
@@ -114,10 +113,10 @@ export const Calculator = () => {
             <TableBody>
               <TableRow>
                 <TableCell sx={{py: 1}}>
-                  {generalBill || 0} 円
+                  {generalBill} 円
                 </TableCell>
                 <TableCell sx={{py: 1}} align="right">
-                  {generalPayerNum || 0} 人
+                  {generalPayerNum} 人
                 </TableCell>
                 <TableCell sx={{width: 136, py: 1}} align="right">
                   <FormControl sx={{width: 110}}>
@@ -182,7 +181,7 @@ export const Calculator = () => {
                 <NumericInput
                   label="金額"
                   adorment="円"
-                  value={optionBill || ''}
+                  value={optionBill}
                   setter={setOptionBill}
                   size="small"
                   fullWidth
@@ -192,7 +191,7 @@ export const Calculator = () => {
                 <NumericInput
                   label="人数"
                   adorment="人"
-                  value={optionPayerNum || ''}
+                  value={optionPayerNum}
                   setter={setOptionPayerNum}
                   size="small"
                   fullWidth
@@ -223,7 +222,7 @@ export const Calculator = () => {
                 集まる金額
               </TableCell>
               <TableCell size="small" align="right">
-                {totalPay || 0} 円
+                {totalPay} 円
               </TableCell>
             </TableRow>
             <TableRow>
@@ -231,7 +230,7 @@ export const Calculator = () => {
                 {remaining >= 0 ? "お釣り" : "不足金額"}
               </TableCell>
               <TableCell size="small" align="right">
-                {remaining >= 0 ? remaining || 0 : -remaining || 0} 円
+                {remaining >= 0 ? remaining: -remaining} 円
               </TableCell>
             </TableRow>
           </TableBody>

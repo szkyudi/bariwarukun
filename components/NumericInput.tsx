@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 import { ChangeEvent } from "react";
 
 interface Props extends FormControlProps {
-  value: number | '',
+  value: number,
   setter?: Dispatch<SetStateAction<number>>,
   label: string,
   adorment: string,
@@ -11,8 +11,10 @@ interface Props extends FormControlProps {
 }
 export const NumericInput = ({ value, setter, label, adorment, disabled, ...props }: Props) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!setter) return;
-    setter(Number(e.currentTarget.value));
+    const currentValue = Number(e.currentTarget.value);
+    if (setter && Number.isInteger(currentValue)) {
+      setter(currentValue);
+    }
   }
 
   return (
@@ -20,7 +22,7 @@ export const NumericInput = ({ value, setter, label, adorment, disabled, ...prop
       <InputLabel>{label}</InputLabel>
       <OutlinedInput
         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-        value={value}
+        value={value === 0 ? '' : value}
         onChange={handleChange}
         endAdornment={<InputAdornment position="end">{adorment}</InputAdornment>}
         label={label}
