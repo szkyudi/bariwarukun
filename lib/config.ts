@@ -1,7 +1,7 @@
 const config = {
-  title: "WARIKA",
+  title: "ワリでん",
   titleSeperator: "｜",
-  subtitle: "雑に割り勘できるワリカ",
+  subtitle: "雑に割り勘できるワリでん",
   description:
     "複数の支払い金額を設定したり、端数を切り捨てて雑に割り勘しちゃおう",
   hostname: "warikan-dentaku.vercel.app",
