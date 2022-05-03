@@ -3,7 +3,7 @@ const config = {
   titleSeperator: "｜",
   subtitle: "雑に割り勘するならワリでん",
   description:
-    "端数を切り捨てたり複数の支払金額を設定して雑に割り勘しちゃおう",
+    "端数を切り上げたり複数の支払金額を設定して雑に割り勘しちゃおう",
   hostname: "warikan-dentaku.vercel.app",
   siteUrl: "https://warikan-dentaku.vercel.app",
   twitterId: "szkyudi",
