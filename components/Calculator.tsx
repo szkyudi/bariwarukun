@@ -214,7 +214,7 @@ export const Calculator = () => {
       {isOpenOption && (
         <Fade in={isOpenOption}>
           <Grid container columnSpacing={1} sx={{ mt: 2}}>
-            <Grid item xs={6}>
+            <Grid item xs={5}>
               <NumericInput
                 label="金額"
                 adorment="円"
@@ -224,7 +224,7 @@ export const Calculator = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <NumericInput
                 label="人数"
                 adorment="人"
