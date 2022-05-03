@@ -7,7 +7,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import { v4 as uuidv4} from 'uuid';
 import { blue } from "@mui/material/colors";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { ceilUnitState, generalBillState, generalPayerNumState, payOptionsState, remainingState, totalBillState, totalPayerNumState, totalPayState } from "../lib/state";
+import { ceilUnitState, generalBillState, generalPayerNumState, optionPayerNumState, payOptionsState, remainingState, totalBillState, totalPayerNumState, totalPayState } from "../lib/state";
 
 export const Calculator = () => {
   const [totalBill, setTotalBill] = useRecoilState(totalBillState);
@@ -19,9 +19,17 @@ export const Calculator = () => {
   const [optionPayerNum, setOptionPayerNum] = useState<number>(0);
 
   const generalPayerNum = useRecoilValue(generalPayerNumState);
+  const optionTotalPayerNum = useRecoilValue(optionPayerNumState);
   const generalBill = useRecoilValue(generalBillState);
   const totalPay = useRecoilValue(totalPayState);
   const remaining = useRecoilValue(remainingState);
+
+  const setTotalPayerNumWithResetOptions = (num: number) => {
+    if (num - optionTotalPayerNum < 0) {
+      setPayOptions([]);
+    }
+    setTotalPayerNum(num);
+  }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,26 +50,44 @@ export const Calculator = () => {
   }
 
   const incrementOptionPayerNum = (id: string) => {
-    setPayOptions(payOptions.map(option => {
-      if (option.id === id) {
-        option.payerNum++;
-      }
-      return option;
-    }))
+    setPayOptions((prevOptions) => {
+      return [
+        ...prevOptions.map(option => {
+          if (option.id === id) {
+            return {
+              ...option,
+              payerNum: option.payerNum + 1
+            };
+          } else {
+            return option;
+          }
+        })
+      ];
+    })
   }
 
   const decrementOptionPayerNum = (id: string) => {
-    if (payOptions.find(option => option.id === id).payerNum <= 1) {
-      removeOption(id);
-      return;
-    }
-    setPayOptions(payOptions.map(option => {
-      if (option.id === id) {
-        option.payerNum--;
-      }
-      return option;
-    }))
+    setPayOptions((prevOptions) => {
+      return [
+        ...prevOptions.map(option => {
+          if (option.id === id) {
+            return {
+              ...option,
+              payerNum: option.payerNum - 1
+            };
+          } else {
+            return option;
+          }
+        })
+      ];
+    })
   }
+
+  const disableAddOptionButton: boolean = (
+    optionPayerNum === 0
+    || optionBill === 0
+    || optionTotalPayerNum + optionPayerNum > totalPayerNum
+  );
 
  return (
     <>
@@ -85,7 +111,7 @@ export const Calculator = () => {
           <NumericInput
             label="合計人数"
             value={totalPayerNum}
-            setter={setTotalPayerNum}
+            setter={setTotalPayerNumWithResetOptions}
             adorment="人"
             size="small"
             fullWidth
@@ -148,7 +174,14 @@ export const Calculator = () => {
                   <TableCell sx={{width: 136, py: 1}} align="right">
                     <ButtonGroup variant="text" size="small">
                       <Button
+                        color="error"
+                        onClick={() => removeOption(option.id)}
+                      >
+                        <DeleteIcon />
+                      </Button>
+                      <Button
                         onClick={() => decrementOptionPayerNum(option.id)}
+                        disabled={option.payerNum <= 1}
                       >
                         <RemoveIcon />
                       </Button>
@@ -157,12 +190,6 @@ export const Calculator = () => {
                         disabled={generalPayerNum <= 0}
                       >
                         <AddIcon />
-                      </Button>
-                      <Button
-                        color="error"
-                        onClick={() => removeOption(option.id)}
-                      >
-                        <DeleteIcon />
                       </Button>
                     </ButtonGroup>
                   </TableCell>
@@ -204,7 +231,7 @@ export const Calculator = () => {
                 sx={{mt: 1}}
                 variant="contained"
                 size="small"
-                disabled={optionBill === 0 || optionPayerNum === 0}
+                disabled={disableAddOptionButton}
               >
                 <Typography variant="button">
                   追加
