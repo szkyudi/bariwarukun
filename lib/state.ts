@@ -113,7 +113,7 @@ export const queryParamsState = selector<string>({
     const c = get(ceilUnitState);
     const op = get(payOptionsState);
     const opParams = op.reduce((prev, option) => {
-      return prev + `&${option.bill},${option.payerNum}`
+      return prev + `&op=${option.bill},${option.payerNum}`
     }, '');
     return `?tb=${tb}&tp${tp}&c=${c}${opParams}`;
   }
