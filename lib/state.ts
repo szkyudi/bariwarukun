@@ -20,10 +20,33 @@ export const payOptionsState = atom<PayOption[]>({
   default: [],
 });
 
-export const ceilUnitState = atom<number>({
-  key: 'ceilUnitState',
+type CeilUnit = 1 | 10 | 50 | 100 | 500 | 1000;
+export const isCeilUnit = (item: any): item is CeilUnit => {
+  return (
+    item === 1
+    || item === 10
+    || item === 50
+    || item === 100
+    || item === 500
+    || item === 1000
+  );
+}
+export const ceilUnitOriginState = atom<number>({
+  key: 'ceilUnitOriginState',
   default: 100,
 });
+
+export const ceilUnitState = selector<CeilUnit>({
+  key: 'ceilUnitState',
+  get: ({ get }) => {
+    const ceilUnitOrigin = get(ceilUnitOriginState);
+    if (isCeilUnit(ceilUnitOrigin)) {
+      return ceilUnitOrigin;
+    } else {
+      return 100
+    }
+  }
+})
 
 export const generalPayerNumState = selector<number>({
   key: 'generalPayerNumState',
