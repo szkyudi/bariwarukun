@@ -1,5 +1,5 @@
 import { ContentCopy } from "@mui/icons-material"
-import { Alert, Fab, Hidden, Snackbar, Typography } from "@mui/material"
+import { Alert, Fab, Snackbar, Typography, Zoom } from "@mui/material"
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
 import { queryParamsState } from "../lib/state"
@@ -17,27 +17,33 @@ export const LinkShareFab = () => {
     setOpen(false);
   }
 
-  return (
-    <>
-      <Fab onClick={handleClick} color="primary" variant="extended" sx={{position: 'fixed', bottom: 16, right: 16}}>
-        <ContentCopy sx={{ mr: 1 }} />
-        <Typography fontWeight="bold">
-          結果をリンクとしてシェア
-        </Typography>
-      </Fab>
-      <Snackbar
-        open={open}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center'
-        }}
-      >
-        <Alert severity="success">
-          クリップボードにコピーしました
-        </Alert>
-      </Snackbar>
-    </>
-  )
+  if (!!queryParams) {
+    return (
+      <>
+        <Zoom in={!!queryParams}>
+          <Fab onClick={handleClick} color="primary" variant="extended" sx={{position: 'fixed', bottom: 16, right: 16}}>
+            <ContentCopy sx={{ mr: 1 }} />
+            <Typography fontWeight="bold">
+              結果をリンクとしてシェア
+            </Typography>
+          </Fab>
+        </Zoom>
+        <Snackbar
+          open={open}
+          autoHideDuration={3000}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center'
+          }}
+        >
+          <Alert severity="success">
+            クリップボードにコピーしました
+          </Alert>
+        </Snackbar>
+      </>
+    )
+  } else {
+    return <></>;
+  }
 }
