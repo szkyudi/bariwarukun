@@ -1,30 +1,33 @@
-import { Alert, Button, ButtonGroup, Fade, FormControl, Grid, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
-import { MouseEventHandler, useState } from "react"
+import { Alert, Button, ButtonGroup, Fade, FormControl, FormControlLabel, FormGroup, Grid, InputAdornment, InputLabel, MenuItem, OutlinedInput, Paper, Select, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material"
+import { ChangeEventHandler, MouseEventHandler, useState } from "react"
 import { NumericInput } from "./NumericInput";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { v4 as uuidv4} from 'uuid';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { ceilUnitOriginState, ceilUnitState, generalBillState, generalTotalPayerNumState, optionTotalPayerNumState, payOptionsState, remainingState, totalBillState, totalPayerNumState, totalPayState } from "../lib/state";
+import { 調整前切上単位, 切上単位, 一般請求額, 一般支払人数, オプション支払人数, 調整前支払オプション, お釣り, お会計, 支払人数, 支払総額, 支払オプション } from "../lib/state";
 import { theme } from "../theme";
 
 export const Calculator = () => {
-  const [totalBill, setTotalBill] = useRecoilState(totalBillState);
-  const [totalPayerNum, setTotalPayerNum] = useRecoilState(totalPayerNumState);
-  const [payOptions, setPayOptions] = useRecoilState(payOptionsState);
-  const setCeilUnitOrigin = useSetRecoilState(ceilUnitOriginState);
-  const ceilUnit = useRecoilValue(ceilUnitState);
+  const [totalBill, setTotalBill] = useRecoilState(お会計);
+  const [totalPayerNum, setTotalPayerNum] = useRecoilState(支払人数);
+  const setPayOptions = useSetRecoilState(調整前支払オプション);
+  const payOptions = useRecoilValue(支払オプション);
+  const setCeilUnitOrigin = useSetRecoilState(調整前切上単位);
+  const ceilUnit = useRecoilValue(切上単位);
 
   const [isOpenOption, setIsOpenOption] = useState(false);
-  const [optionBill, setOptionBill] = useState<number>(0);
+  const [isOpenBillInput, setIsOpenBillInput] = useState(false);
+  const [optionBill, setOptionBill] = useState(0);
+  const [optionRatio, setOptionRatio] = useState<string>("1.0");
   const [optionPayerNum, setOptionPayerNum] = useState<number>(0);
 
-  const generalTotalPayerNum = useRecoilValue(generalTotalPayerNumState);
-  const optionTotalPayerNum = useRecoilValue(optionTotalPayerNumState);
-  const generalBill = useRecoilValue(generalBillState);
-  const totalPay = useRecoilValue(totalPayState);
-  const remaining = useRecoilValue(remainingState);
+  const generalTotalPayerNum = useRecoilValue(一般支払人数);
+  const optionTotalPayerNum = useRecoilValue(オプション支払人数);
+  const generalBill = useRecoilValue(一般請求額);
+  const totalPay = useRecoilValue(支払総額);
+  const remaining = useRecoilValue(お釣り);
 
   const setTotalPayerNumWithResetOptions = (num: number) => {
     if (num - optionTotalPayerNum < 0) {
@@ -35,16 +38,31 @@ export const Calculator = () => {
 
   const handleClick: MouseEventHandler = (e) => {
     e.preventDefault();
-    setPayOptions([
-      ...payOptions,
-      {
-        id: uuidv4(),
-        bill: optionBill,
-        payerNum: optionPayerNum
-      },
-    ])
-    setOptionBill(0);
-    setOptionPayerNum(0);
+    if (isOpenBillInput) {
+      setPayOptions(prevOptions => [
+        ...prevOptions,
+        {
+          id: uuidv4(),
+          bill: optionBill,
+          payerNum: optionPayerNum
+        },
+      ])
+      setOptionBill(0);
+      setOptionPayerNum(0);
+    } else {
+      if (Number(optionRatio) && Number(optionRatio) !== 0) {
+        setPayOptions(prevOptions => [
+          ...prevOptions,
+          {
+            id: uuidv4(),
+            ratio: Number(optionRatio),
+            payerNum: optionPayerNum
+          },
+        ])
+        setOptionRatio("1.0");
+        setOptionPayerNum(0);
+      }
+    }
   }
 
   const removeOption = (id: string) => {
@@ -87,7 +105,7 @@ export const Calculator = () => {
 
   const disableAddOptionButton: boolean = (
     optionPayerNum === 0
-    || optionBill === 0
+    || Number(optionRatio) === 0
     || optionTotalPayerNum + optionPayerNum > totalPayerNum
   );
 
@@ -216,14 +234,28 @@ export const Calculator = () => {
         <Fade in={isOpenOption}>
           <Grid container columnSpacing={1} sx={{ mt: 2}}>
             <Grid item xs={5}>
-              <NumericInput
-                label="金額"
-                adorment="円"
-                value={optionBill}
-                setter={setOptionBill}
-                size="small"
-                fullWidth
-              />
+              {isOpenBillInput ? (
+                <NumericInput
+                  label="金額"
+                  adorment="円"
+                  value={optionBill}
+                  setter={setOptionBill}
+                  size="small"
+                  fullWidth
+                />
+              ) : (
+                <FormControl variant="outlined">
+                  <InputLabel>倍率</InputLabel>
+                  <OutlinedInput
+                    value={optionRatio}
+                    onChange={(e) => setOptionRatio(e.target.value)}
+                    endAdornment={<InputAdornment position="end">倍</InputAdornment>}
+                    label="倍率"
+                    size="small"
+                    onFocus={(e) => e.currentTarget.select()}
+                  />
+                </FormControl>
+              )}
             </Grid>
             <Grid item xs={4}>
               <NumericInput
@@ -248,6 +280,15 @@ export const Calculator = () => {
                   追加
                 </Typography>
               </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                sx={{m: 0, mt: 1}}
+                control={
+                  <Switch size="small" onChange={(e) => setIsOpenBillInput(e.target.checked)} />
+                }
+                label="金額で入力"
+              />
             </Grid>
           </Grid>
         </Fade>

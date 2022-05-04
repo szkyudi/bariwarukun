@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 import { Calculator } from "../components/Calculator"
 import config from "../lib/config"
-import { ceilUnitOriginState, PayOption, payOptionsState, totalBillState, totalPayerNumState } from "../lib/state";
+import { 調整前切上単位, BasePayOption, 調整前支払オプション, お会計, 支払人数 } from "../lib/state";
 import { v4 as uuidv4} from 'uuid';
 import { LinkShareFab } from "../components/LinkShareFab";
 import { LinkShareButton } from "../components/LinkShareButton";
@@ -12,10 +12,10 @@ import { LinkShareButton } from "../components/LinkShareButton";
 const Home = () => {
   const router = useRouter();
   const { tb, tp, c, op } = router.query;
-  const setTotalBill = useSetRecoilState(totalBillState);
-  const setTotalPayerNum = useSetRecoilState(totalPayerNumState);
-  const setCeilUnitOrign = useSetRecoilState(ceilUnitOriginState);
-  const setPayOptions = useSetRecoilState(payOptionsState);
+  const setTotalBill = useSetRecoilState(お会計);
+  const setTotalPayerNum = useSetRecoilState(支払人数);
+  const setCeilUnitOrign = useSetRecoilState(調整前切上単位);
+  const setPayOptions = useSetRecoilState(調整前支払オプション);
 
   useEffect(() => {
     const totalBill = Number.isInteger(Number(tb)) ? Number(tb) : undefined;
@@ -26,21 +26,27 @@ const Home = () => {
     totalPayerNum && setTotalPayerNum(totalPayerNum);
     ceilUnit && setCeilUnitOrign(ceilUnit);
 
-    const options: PayOption[] = [];
+    const options: BasePayOption[] = [];
     if (Array.isArray(op)) {
       op.forEach(option => {
-        const [opb, opp] = option.split(',');
-        const bill = Number.isInteger(Number(opb)) ? Number(opb) : undefined;
+        const [opborr, opp] = option.split(',');
+        const ratio = opborr.slice(-1) === 'x' && parseFloat(opborr) ? parseFloat(opborr) : undefined;
+        const bill = Number.isInteger(Number(opborr)) ? Number(opborr) : undefined;
         const payerNum = Number.isInteger(Number(opp)) ? Number(opp) : undefined;
-        if (bill && payerNum) {
+        if (ratio && payerNum) {
+          options.push({ id: uuidv4(), ratio, payerNum });
+        } else if (bill && payerNum) {
           options.push({ id: uuidv4(), bill, payerNum });
         }
       })
     } else if (op) {
-      const [opb, opp] = op.split(',');
-      const bill = Number.isInteger(Number(opb)) ? Number(opb) : undefined;
+      const [opborr, opp] = op.split(',');
+      const ratio = opborr.slice(-1) === 'x' && parseFloat(opborr) ? parseFloat(opborr) : undefined;
+      const bill = Number.isInteger(Number(opborr)) ? Number(opborr) : undefined;
       const payerNum = Number.isInteger(Number(opp)) ? Number(opp) : undefined;
-      if (bill && payerNum) {
+      if (ratio && payerNum) {
+        options.push({ id: uuidv4(), ratio, payerNum });
+      } else if (bill && payerNum) {
         options.push({ id: uuidv4(), bill, payerNum });
       }
     }
