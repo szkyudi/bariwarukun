@@ -10,6 +10,7 @@ class MyDocument extends Document {
   }
 
   render() {
+    const env = process.env.NODE_ENV;
     return (
       <Html>
         <Head>
@@ -30,6 +31,21 @@ class MyDocument extends Document {
           `,
             }}
           />
+          {/*  Twitter universal website tag code */}
+          {env === 'production' && (
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+                  },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='//static.ads-twitter.com/uwt.js',
+                  a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+                  twq('init','o8n98');
+                  twq('track','PageView');
+                `
+              }}
+            />
+          )}
+          {/* End Twitter universal website tag code */}
           <meta name="viewport" content="initial-scale=1, width=device-width" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
