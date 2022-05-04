@@ -104,3 +104,17 @@ export const remainingState = selector<number>({
     return get(totalPayState) - get(totalBillState);
   }
 })
+
+export const queryParamsState = selector<string>({
+  key: 'queryParams',
+  get: ({ get }) => {
+    const tb = get(totalBillState);
+    const tp = get(totalPayerNumState);
+    const c = get(ceilUnitState);
+    const op = get(payOptionsState);
+    const opParams = op.reduce((prev, option) => {
+      return prev + `&${option.bill},${option.payerNum}`
+    }, '');
+    return `?tb=${tb}&tp${tp}&c=${c}${opParams}`;
+  }
+})
