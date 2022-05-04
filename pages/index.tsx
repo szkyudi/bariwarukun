@@ -51,7 +51,7 @@ const Home = () => {
       router.push('/');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tb, tp, c, op])
+  }, [router.query])
 
   return (
     <>
