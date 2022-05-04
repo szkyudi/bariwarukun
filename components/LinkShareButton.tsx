@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import { ContentCopy } from "@mui/icons-material"
-import { Alert, Button, Snackbar, Typography } from "@mui/material"
+import { Alert, Button, Slide, Snackbar, Typography } from "@mui/material"
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
 import { queryParamsState } from "../lib/state"
@@ -18,26 +18,32 @@ export const LinkShareButton = () => {
     setOpen(false);
   }
 
-  return (
-    <>
-      <Button onClick={handleClick} variant="text" color="inherit" startIcon={<ContentCopy />}>
-        <Typography fontWeight="bold">
-          結果をリンクとしてシェア
-        </Typography>
-      </Button>
-      <Snackbar
-        open={open}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center'
-        }}
-      >
-        <Alert severity="success">
-          クリップボードにコピーしました
-        </Alert>
-      </Snackbar>
-    </>
-  )
+  if (!!queryParams) {
+    return (
+      <>
+        <Slide direction="left" in={!!queryParams}>
+          <Button onClick={handleClick} variant="text" color="inherit" startIcon={<ContentCopy />}>
+            <Typography fontWeight="bold">
+              結果をリンクとしてシェア
+            </Typography>
+          </Button>
+        </Slide>
+        <Snackbar
+          open={open}
+          autoHideDuration={3000}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center'
+          }}
+        >
+          <Alert severity="success">
+            クリップボードにコピーしました
+          </Alert>
+        </Snackbar>
+      </>
+    )
+  } else {
+    return <></>;
+  }
 }

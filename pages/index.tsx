@@ -1,4 +1,4 @@
-import { AppBar, Box, Container, Hidden, Toolbar, Typography } from "@mui/material"
+import { AppBar, Box, Container, Hidden, Toolbar, Typography, Zoom } from "@mui/material"
 import { useRouter } from "next/router"
 import { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
@@ -61,7 +61,7 @@ const Home = () => {
           </Hidden>
         </Toolbar>
       </AppBar>
-      <Container maxWidth="sm">
+      <Container maxWidth="sm" sx={{pb: 8}}>
         <Box sx={{my: 2}}>
           <Calculator />
         </Box>
