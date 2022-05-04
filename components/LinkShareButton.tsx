@@ -1,6 +1,6 @@
-import styled from "@emotion/styled"
 import { ContentCopy } from "@mui/icons-material"
 import { Alert, Button, Slide, Snackbar, Typography } from "@mui/material"
+import { useRouter } from "next/router"
 import { useState } from "react"
 import { useRecoilValue } from "recoil"
 import { queryParamsState } from "../lib/state"
@@ -8,9 +8,11 @@ import { queryParamsState } from "../lib/state"
 export const LinkShareButton = () => {
   const queryParams = useRecoilValue(queryParamsState);
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   const handleClick = () => {
     navigator.clipboard.writeText(location.origin + queryParams);
+    router.push(queryParams);
     setOpen(true);
   }
 

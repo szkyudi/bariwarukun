@@ -47,9 +47,6 @@ const Home = () => {
     if (totalBill && totalPayerNum && options.reduce((prev, option) => prev + option.payerNum, 0) <= totalPayerNum) {
       setPayOptions(options)
     }
-    if (tb || tp || c || op) {
-      router.push('/');
-    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query])
 
