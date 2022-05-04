@@ -48,7 +48,9 @@ export const generalBillState = selector<number>({
     const totalBill = get(totalBillState);
     const optionTotalPay = get(optionTotalPayState);
     const generalPayerNum = get(generalPayerNumState);
-    return generalPayerNum ? Math.ceil((totalBill - optionTotalPay) / generalPayerNum / ceilUnit) * ceilUnit : 0;
+    const generalBill = Math.ceil((totalBill - optionTotalPay) / generalPayerNum / ceilUnit) * ceilUnit;
+
+    return generalPayerNum === 0 || generalBill < 0 ? 0 : generalBill;
   }
 });
 
