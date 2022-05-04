@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 import { Calculator } from "../components/Calculator"
 import config from "../lib/config"
-import { ceilUnitOriginState, payOptionsState, totalBillState, totalPayerNumState } from "../lib/state";
+import { ceilUnitOriginState, PayOption, payOptionsState, totalBillState, totalPayerNumState } from "../lib/state";
 import { v4 as uuidv4} from 'uuid';
 
 const Home = () => {
@@ -24,7 +24,7 @@ const Home = () => {
     totalPayerNum && setTotalPayerNum(totalPayerNum);
     ceilUnit && setCeilUnitOrign(ceilUnit);
 
-    const options = [];
+    const options: PayOption[] = [];
     if (Array.isArray(op)) {
       op.forEach(option => {
         const [opb, opp] = option.split(',');
@@ -42,7 +42,9 @@ const Home = () => {
         options.push({ id: uuidv4(), bill, payerNum });
       }
     }
-    setPayOptions(options);
+    if (totalBill && totalPayerNum && options.reduce((prev, option) => prev + option.payerNum, 0) <= totalPayerNum) {
+      setPayOptions(options)
+    }
   })
 
   return (

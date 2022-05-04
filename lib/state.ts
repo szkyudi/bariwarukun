@@ -10,7 +10,7 @@ export const totalPayerNumState = atom<number>({
   default: 0,
 });
 
-type PayOption = {
+export type PayOption = {
   id: string;
   bill: number;
   payerNum: number;
