@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { v4 as uuidv4} from 'uuid';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { ceilUnitOriginState, ceilUnitState, generalBillState, generalPayerNumState, optionPayerNumState, payOptionsState, remainingState, totalBillState, totalPayerNumState, totalPayState } from "../lib/state";
+import { ceilUnitOriginState, ceilUnitState, generalBillState, generalTotalPayerNumState, optionTotalPayerNumState, payOptionsState, remainingState, totalBillState, totalPayerNumState, totalPayState } from "../lib/state";
 import { theme } from "../theme";
 
 export const Calculator = () => {
@@ -20,8 +20,8 @@ export const Calculator = () => {
   const [optionBill, setOptionBill] = useState<number>(0);
   const [optionPayerNum, setOptionPayerNum] = useState<number>(0);
 
-  const generalPayerNum = useRecoilValue(generalPayerNumState);
-  const optionTotalPayerNum = useRecoilValue(optionPayerNumState);
+  const generalTotalPayerNum = useRecoilValue(generalTotalPayerNumState);
+  const optionTotalPayerNum = useRecoilValue(optionTotalPayerNumState);
   const generalBill = useRecoilValue(generalBillState);
   const totalPay = useRecoilValue(totalPayState);
   const remaining = useRecoilValue(remainingState);
@@ -143,7 +143,7 @@ export const Calculator = () => {
                 {generalBill} 円
               </TableCell>
               <TableCell align="right">
-                {generalPayerNum} 人
+                {generalTotalPayerNum} 人
               </TableCell>
               <TableCell sx={{width: 136}} align="right">
                 <FormControl sx={{width: 110}}>
@@ -190,7 +190,7 @@ export const Calculator = () => {
                     </Button>
                     <Button
                       onClick={() => incrementOptionPayerNum(option.id)}
-                      disabled={generalPayerNum <= 0}
+                      disabled={generalTotalPayerNum <= 0}
                     >
                       <AddIcon />
                     </Button>

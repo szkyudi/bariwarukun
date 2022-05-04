@@ -48,17 +48,17 @@ export const ceilUnitState = selector<CeilUnit>({
   }
 })
 
-export const generalPayerNumState = selector<number>({
-  key: 'generalPayerNumState',
+export const generalTotalPayerNumState = selector<number>({
+  key: 'generalTotalPayerNumState',
   get: ({ get }) => {
     const totalPayerNum = get(totalPayerNumState);
-    const optionPayerNum = get(optionPayerNumState);
+    const optionPayerNum = get(optionTotalPayerNumState);
     return totalPayerNum - optionPayerNum;
   },
 });
 
-export const optionPayerNumState = selector<number>({
-  key: 'optionPayerNumState',
+export const optionTotalPayerNumState = selector<number>({
+  key: 'optionTotalPayerNumState',
   get: ({ get }) => {
     return get(payOptionsState).reduce((prev, option) => prev + option.payerNum, 0);
   }
@@ -70,7 +70,7 @@ export const generalBillState = selector<number>({
     const ceilUnit = get(ceilUnitState);
     const totalBill = get(totalBillState);
     const optionTotalPay = get(optionTotalPayState);
-    const generalPayerNum = get(generalPayerNumState);
+    const generalPayerNum = get(generalTotalPayerNumState);
     const generalBill = Math.ceil((totalBill - optionTotalPay) / generalPayerNum / ceilUnit) * ceilUnit;
 
     return generalPayerNum === 0 || generalBill < 0 ? 0 : generalBill;
@@ -80,7 +80,7 @@ export const generalBillState = selector<number>({
 export const generalTotalPayState = selector<number>({
   key: 'generalTotalPayState',
   get: ({ get }) => {
-    return get(generalBillState) * get(generalPayerNumState);
+    return get(generalBillState) * get(generalTotalPayerNumState);
   }
 });
 
