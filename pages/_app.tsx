@@ -7,7 +7,9 @@ const App = ({ Component, pageProps }) => (
   <RecoilRoot>
     <CssBaseline enableColorScheme />
     <ThemeProvider theme={theme}>
-      <Seo />
+      <Seo
+        title="多機能割り勘電卓「ばりわるくん」"
+      />
       <Component {...pageProps} />
     </ThemeProvider>
   </RecoilRoot>
