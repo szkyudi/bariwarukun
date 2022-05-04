@@ -5,15 +5,16 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { v4 as uuidv4} from 'uuid';
-import { useRecoilState, useRecoilValue } from "recoil";
-import { ceilUnitState, generalBillState, generalPayerNumState, optionPayerNumState, payOptionsState, remainingState, totalBillState, totalPayerNumState, totalPayState } from "../lib/state";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { ceilUnitOriginState, ceilUnitState, generalBillState, generalPayerNumState, optionPayerNumState, payOptionsState, remainingState, totalBillState, totalPayerNumState, totalPayState } from "../lib/state";
 import { theme } from "../theme";
 
 export const Calculator = () => {
   const [totalBill, setTotalBill] = useRecoilState(totalBillState);
   const [totalPayerNum, setTotalPayerNum] = useRecoilState(totalPayerNumState);
   const [payOptions, setPayOptions] = useRecoilState(payOptionsState);
-  const [ceilUnit, setCeilUnit] = useRecoilState(ceilUnitState);
+  const setCeilUnitOrigin = useSetRecoilState(ceilUnitOriginState);
+  const ceilUnit = useRecoilValue(ceilUnitState);
 
   const [isOpenOption, setIsOpenOption] = useState(false);
   const [optionBill, setOptionBill] = useState<number>(0);
@@ -153,7 +154,7 @@ export const Calculator = () => {
                     value={ceilUnit}
                     label="端数切上"
                     size="small"
-                    onChange={(e) => setCeilUnit(Number(e.target.value))}
+                    onChange={(e) => setCeilUnitOrigin(Number(e.target.value))}
                   >
                     <MenuItem value={1}>1円</MenuItem>
                     <MenuItem value={10}>10円</MenuItem>
