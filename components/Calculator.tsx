@@ -93,7 +93,7 @@ export const Calculator = () => {
 
  return (
     <>
-      <Alert severity="success">
+      <Alert severity="info">
         <Typography variant="caption">
           リアルタイムで変更を検知して再計算されます
         </Typography>
