@@ -91,6 +91,7 @@ type PayOption = {
 export const 支払オプション = selector<PayOption[]>({
   key: '支払オプション',
   get: ({ get }) => {
+    const ceilUnit = get(切上単位);
     const remain = get(お会計と固定支払総額の差額);
     const payOptions = get(調整前支払オプション)
     let totalRatio = get(一般支払人数) + payOptions.reduce((prev, option) => {
@@ -106,7 +107,7 @@ export const 支払オプション = selector<PayOption[]>({
         return {
           id: option.id,
           payerNum: option.payerNum,
-          bill: Math.ceil(remain / totalRatio * option.ratio),
+          bill: Math.ceil(remain / totalRatio * option.ratio / ceilUnit) * ceilUnit,
         }
       } else {
         return option

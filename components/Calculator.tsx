@@ -152,17 +152,6 @@ export const Calculator = () => {
                     人数
                   </Typography>
               </TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody sx={{ 'tr:last-child td, tr:last-child th': {border: 0}}}>
-            <TableRow>
-              <TableCell>
-                {generalBill} 円
-              </TableCell>
-              <TableCell align="right">
-                {generalTotalPayerNum} 人
-              </TableCell>
               <TableCell sx={{width: 136}} align="right">
                 <FormControl sx={{width: 110}}>
                   <InputLabel id="ceil-unit-label">端数切上</InputLabel>
@@ -182,6 +171,31 @@ export const Calculator = () => {
                     <MenuItem value={1000}>1000円</MenuItem>
                   </Select>
                 </FormControl>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody sx={{ 'tr:last-child td, tr:last-child th': {border: 0}}}>
+            <TableRow>
+              <TableCell>
+                {generalBill} 円
+              </TableCell>
+              <TableCell align="right">
+                {generalTotalPayerNum} 人
+              </TableCell>
+              <TableCell align="right">
+                <ButtonGroup variant="text" size="small">
+                    <Button
+                      onClick={() => setTotalPayerNum(totalPayerNum - 1)}
+                      disabled={generalTotalPayerNum <= 0}
+                    >
+                      <RemoveIcon />
+                    </Button>
+                    <Button
+                      onClick={() => setTotalPayerNum(totalPayerNum + 1)}
+                    >
+                      <AddIcon />
+                    </Button>
+                  </ButtonGroup>
               </TableCell>
             </TableRow>
             {payOptions.map(option => (
@@ -244,13 +258,13 @@ export const Calculator = () => {
                   fullWidth
                 />
               ) : (
-                <FormControl variant="outlined">
-                  <InputLabel>倍率</InputLabel>
+                <FormControl variant="outlined" size="small">
+                  <InputLabel>比率</InputLabel>
                   <OutlinedInput
                     value={optionRatio}
                     onChange={(e) => setOptionRatio(e.target.value)}
                     endAdornment={<InputAdornment position="end">倍</InputAdornment>}
-                    label="倍率"
+                    label="比率"
                     size="small"
                     onFocus={(e) => e.currentTarget.select()}
                   />
