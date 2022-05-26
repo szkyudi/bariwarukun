@@ -185,12 +185,14 @@ export const Calculator = () => {
               <TableCell align="right">
                 <ButtonGroup variant="text" size="small">
                     <Button
+                      aria-label="人数を減らすボタン"
                       onClick={() => setTotalPayerNum(totalPayerNum - 1)}
                       disabled={generalTotalPayerNum <= 0}
                     >
                       <RemoveIcon />
                     </Button>
                     <Button
+                      aria-label="人数を増やすボタン"
                       onClick={() => setTotalPayerNum(totalPayerNum + 1)}
                     >
                       <AddIcon />
@@ -215,12 +217,14 @@ export const Calculator = () => {
                       <DeleteIcon />
                     </Button>
                     <Button
+                      aria-label="人数を減らすボタン"
                       onClick={() => decrementOptionPayerNum(option.id)}
                       disabled={option.payerNum <= 1}
                     >
                       <RemoveIcon />
                     </Button>
                     <Button
+                      aria-label="人数を増やすボタン"
                       onClick={() => incrementOptionPayerNum(option.id)}
                       disabled={generalTotalPayerNum <= 0}
                     >
