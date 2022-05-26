@@ -12,7 +12,7 @@ class MyDocument extends Document {
   render() {
     const env = process.env.NODE_ENV;
     return (
-      <Html>
+      <Html lang='ja'>
         <Head>
           {/* Global Site Tag (gtag.js) - Google Analytics */}
           <script
